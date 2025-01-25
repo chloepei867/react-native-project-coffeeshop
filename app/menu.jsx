@@ -15,16 +15,6 @@ import React from "react";
 import { MENU_ITEMS } from "@/constants/MenuItems";
 import MENU_IMAGES from "@/constants/MenuImages";
 
-const Item = ({ title, description, index, styles }) => (
-  <View style={styles.card}>
-    <Image source={MENU_IMAGES[index - 1]} style={styles.image} />
-    <View style={styles.textContainer}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
-    </View>
-  </View>
-);
-
 export default function MenuScreen() {
   const colorScheme = Appearance.getColorScheme();
   const theme = colorScheme === "dark" ? Colors.dark : Colors.light;
@@ -33,28 +23,29 @@ export default function MenuScreen() {
 
   const separatorComponent = <View style={styles.separator} />;
   const headerComponent = <Text>Top of List</Text>;
-  const footerComponent = <Text style={theme.text}>- End -</Text>;
+  const footerComponent = <Text style={{ color: theme.text }}>- End -</Text>;
 
   return (
     <Container>
       <FlatList
         data={MENU_ITEMS}
-        showsVerticalScrollIndicator={true}
+        keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
         // ItemSeparatorComponent={separatorComponent}
-        // ListHeaderComponent={headerComponent}
+        //ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
-        ListFooterComponentStyle={styles.listFooterComponent}
+        ListFooterComponentStyle={styles.footerComp}
         ListEmptyComponent={<Text>No items</Text>}
         renderItem={({ item }) => (
-          <Item
-            title={item.title}
-            description={item.description}
-            styles={styles}
-            index={item.id}
-          />
+          <View style={styles.card}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.description}>{item.description}</Text>
+            </View>
+            <Image source={MENU_IMAGES[item.id - 1]} style={styles.image} />
+          </View>
         )}
-        keyExtractor={(item) => item.id.toString()}
       />
     </Container>
   );
@@ -119,6 +110,9 @@ const createStyle = (theme, colorScheme) => {
     },
     listFooterComponent: {
       paddingVertical: 15,
+      marginHorizontal: "auto",
+    },
+    footerComp: {
       marginHorizontal: "auto",
     },
   });
